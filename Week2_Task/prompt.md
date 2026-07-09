@@ -1,4 +1,4 @@
-#Phase 1: Repository Analysis Prompt
+# Phase 1: Repository Analysis Prompt
 
 ## Objective
 
