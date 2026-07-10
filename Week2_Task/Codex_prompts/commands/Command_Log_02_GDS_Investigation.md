@@ -1,129 +1,127 @@
+# Command Log 02 - GDS Integration Investigation
 
-# avsdmux2x1_3v3
-**avsdmux2x1_3v3** is a 2 input analog multiplexer. The entire  design is done with the help of OSU 180nm library.  
-Transmission gates were used to design the analog multiplexer. The height, width and area of avsdmux2x1_3v3 is given below.
+## Objective
 
-<img src="Step_Images/heightwidth.PNG" width="400" height="139" >
+Investigate how the AMUX2_3V analog macro is represented in the reproduced mixed-signal flow and determine whether a dedicated macro GDS is used.
 
-## Symbol and Pin Description
-*In a 2 input analog multiplexer there is a total of 6 pins*
-1. Two input pins. (I0 and I1)
-2. One Select signal pins. (select)
-3. Output pin. (Out)
-4. Power pins (VDD and VSS)
+---
 
-<img src="Step_Images/symbol21.PNG" width="600" height="378" >
-<img src="Step_Images/sym21.PNG" width="650" height="400" >
+## Search for Macro Files
 
-## Forthcoming Work  
-The design of analog multiplexer is done and its characteristics were verified till the post layout stage.  
-As a next step in the future PnR (Place and Route) woks will be carried out and an entire chip design will  
-be done. PnR will be done with the help of OpenROAD tools.
+```bash
+find . -iname "*AMUX*"
+```
 
-## IP Usage 
-To view the IP characteristics and layout you have to install **NGSPICE and MAGIC VLSI Layout tool**. The  
-setup and usage steps are mentioned below.
+Purpose:
 
-## NGSPICE
-NGSPICE can be used to view the input output waveforms using spice netlist. NGSPICE is an open source mixed-signal circuit  
-simulator. It is the result of combining existing SPICE features with some extra analyses, modeling  
-methods and device simulation features.
+- Locate all available macro abstraction files
 
-## SETUP
-**WINDOWS and Mac**  
-1. NGSPICE zip file should be downloaded. The ZIP file can be downloaded from [Here](http://ngspice.sourceforge.net/download.html). 
+Result:
 
-   <img src="Step_Images/win_insta.PNG" width="500" height="360" >
+Found:
 
-2. Once downloaded extract the files in a folder of your convenience.
-3. The netlist files should be saved inside the same folder, so choose your location accordingly.
+- AMUX2_3V.v
+- AMUX2_3V.lef
+- AMUX2_3V.lib
 
-**Ubuntu LINUX**
-1. LINUX users, open the LINUX terminal and write the following command and press ENTER:  
-   ```sudo apt-get install ngspice```
-2. Type your Password and press ENTER.
+No AMUX2_3V.gds file was found.
 
-   <img src="Step_Images/insta.PNG" width="500" height="360" >
-   
-3. NGSPICE will be installed in a couple of minutes.
+---
 
-## MAGIC VLSI Layout Tool
-Magic is a venerable VLSI layout tool, written in the 1980's at Berkeley by John Ousterhout. It is  
-largely used for academic purpose and also used by small companiies.
+## Search for GDS Files
 
-## SETUP
-1. Clone the repositary using command ```git clone https://github.com/prithivjp/Analog-Multiplexer.git```
-2. You can find a file **magic.sh** and a file **SCN6M_SUBM.10.tech** inside the folder MAGIC in the  
-   repositary, copy both files to Home.
-3. Open Terminal and run the following two commands:
-      ```chmod +x magic.sh```
-      ```./magic.sh```
-4. MAGIC will be installed in a couple of minutes.
-5. Since OSU 180nm technology is used you have to include the apprpriate tech file. Run the following command
-      ```sudo cp SCN6M_SUBM.10.tech /usr/local/lib/magic/sys/```
-      
- ## Viewing Characteristics using NGSPICE 
-**WINDOWS and Mac**
-1. After done with the extraction of the NGSPICE zip file, open the folder where you can see a folder named ```Spice64```.
-2. Open the ```Spice64``` folder followed by another folder named ```bin```.
-3. Copy the netlist files (.cir and .spice) and the library files(.lib) from the folder Netlists in the repositary and  
-   save them inside bin folder mentioned above.
-4. Open the ```ngspice``` applicaion in the bin folder and type the name of the .cir file saved in the previous  
-   step along with the extension. Say for example if the file name is Data_Acquisition, type Data_Acquisition.cir in the box.
-   
-   <img src="Step_Images/Run3.PNG" width="700" height="295" >
-   
-5. Press ENTER and respective waveforms appear.
+```bash
+find . -iname "*.gds"
+```
 
-**LINUX**
-1. Copy the netlist files (.cir and .spice) and the library files(.lib) from the folder Netlists in the repositary to  
-   some location. Also copy the library files to home also.
-2. Open the LINUX terminal and write the command ```ngspice``` and press enter.
+Purpose:
 
-   <img src="Step_Images/Run1.PNG" width="500" height="360" >
-   
-3. Type the path of the file saved in step 2 and and press enter. For example if the netlist files are  
-   saved in Documents the command is ```Documents/Data_Acquisition.cir```.
-   
-   <img src="Step_Images/Run2.PNG" width="500" height="360" >
-   
-4. Respective waveforms appear.
+- Identify generated GDS outputs
 
-## Viewing Layout
-1. After cloning the repositary copy the layout files (.mag) in the folder Layout to some location.
-2. Right click on the new folder where the layout files are saved and click ```Open in terminal```.
-3. Say, you want to open the layout of 21mux. Then type the following command and press enter  
-   ```magic -T SCN6M_SUBM.10.tech 21mux.mag```
-4. If you wish to view the spice file of the layout, open the tkcon window and enter the following  
-   commands one by one:
-         ```save```  
-         ```ext```  
-         ```ext2spice```
-5. You can see the spice file in the same folder as that of your layout file.
+Result:
 
-    To run the post layout simulations, you have to add certain lines to the spice file extracted  
-    such as library file include commands, voltage descriptions of input and power pins and simulation  
-    commands such as **tran and control** commands. Such spice files are already made availabel in the 
-    folder **NETLIST**.
-   
-## Pre Layout and Post Layout characteristics
-The schematic and the layout of the 2 input analog multiplexer is given below:
+Found:
 
-<img src="Step_Images/21prepost.PNG" width="900" height="580" >
+- design_mux.magic.gds
 
-## Characteristics
-Two different inputs were given to the analog multiplexer model and the characteristics of pre and post layout  
-were compared. Very slight glitches and some little variations were seen in the post layout characteristics.  
-The respective spice files for pre layout and post layout is available in the folder **Netlist** in the repositary.  
-Follow the steps mentioned in the **Viewing Characteristics** part of README.
+---
 
-<img src="Step_Images/21prelayoutcharac.PNG" width="1101" height="580" >
+## Search for GDS References
 
-<img src="Step_Images/21postlayoutcharac.PNG" width="1099" height="580" >
+```bash
+grep -R "\"EXTRA_GDS" .
+```
 
-For any dissimilarities found between the pre layout and postlayout characteristics or any difficulties with  
-respect to IP Usage, contact the administrator or report in issues section of github.
-    
-## Contact Details
-   **Prithivi Raj K  National Institute of Technology Tiruchirapalli prithivjp@gmail.com**  
-   **Kunal Ghosh  Co-Founder at VLSI System Design(VSD) kunalpghosh@gmail.com**  
+Purpose:
+
+- Determine whether any stage of the flow referenced a macro GDS file
+
+Result:
+
+All stages reported:
+
+```json
+"EXTRA_GDS_FILES": null
+```
+
+---
+
+## Search for Macro References
+
+```bash
+grep -R "AMUX2_3V" config.json
+```
+
+Purpose:
+
+- Verify macro integration settings
+
+Result:
+
+Confirmed:
+
+- EXTRA_LEFS
+- EXTRA_LIBS
+- FP_PDN_MACRO_HOOKS
+
+---
+
+## KLayout Hierarchy Inspection
+
+Procedure:
+
+1. Opened design_mux.magic.gds
+2. Examined cell hierarchy
+3. Inspected child cells under design_mux
+
+Result:
+
+Observed:
+
+- sky130_fd_sc_hd_* standard cells
+
+Did not observe:
+
+- AMUX2_3V cell instance
+
+---
+
+## Conclusion
+
+The reproduced flow successfully generated a final GDS.
+
+The implementation relied on:
+
+- Verilog abstraction
+- LEF abstraction
+- LIB abstraction
+
+No standalone macro GDS file was used during implementation.
+
+---
+
+## Updated Conclusion
+
+The GDS investigation confirmed that no standalone `AMUX2_3V.gds` file is provided within the reproduced implementation flow and that the OpenLane configuration does not reference any external macro GDS through `EXTRA_GDS_FILES`.
+At the time of the Week 2 investigation, this prevented a definitive conclusion regarding how the analog macro was represented in the final layout.
+A subsequent Week 3 RTL-to-GDS trace resolved this question by verifying that the `AMUX2_3V` macro is preserved throughout synthesis, floorplanning, placement, detailed routing and DEF generation, and is identifiable in the generated layout. Therefore, this command log documents the initial investigation, while the complete verification is presented in the Week 3 command log and observations.
