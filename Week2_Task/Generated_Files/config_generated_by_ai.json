@@ -1,0 +1,26 @@
+{
+    "DESIGN_NAME": "design_mux",
+
+    "VERILOG_FILES": [
+        "dir::design_mux.v",
+        "dir::raven_spi.v"
+    ],
+
+    "CLOCK_PORT": "select",
+    "CLOCK_PERIOD": 10,
+
+    "FP_CORE_UTIL": 20,
+    "PL_TARGET_DENSITY": 0.4,
+
+    "EXTRA_LEFS": [
+        "dir::AMUX2_3V.lef"
+    ],
+
+    "EXTRA_LIBS": [
+        "dir::AMUX2_3V.lib"
+    ],
+
+    "FP_PDN_MACRO_HOOKS": [
+        "AMUX2_3V VPWR VGND VPWR VGND"
+    ]
+}
